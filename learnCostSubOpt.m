@@ -1,8 +1,8 @@
 function [obj,thetaInv] = learnCostSubOpt(dat,const)
-
-    %dat has the following fields
-    %dat.x: the states of the system in row format
-    %dat.u: the optimal input in row format
+%Function to learn a quadratic cost given some data and constraints
+%dat: an object of type data.
+%const: structure consisting of field M,W, and L, denoting constraints of
+%       the form Mu <= Wx + L
     n = dat.length;
     n_in = dat.nFeatures;%dimension of algorithm-input data sample
     n_out = dat.nActions;%dimension of algorithm-output data sample
