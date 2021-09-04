@@ -1,54 +1,56 @@
-function [phi,x, objective] = simulate(d,theta)
+function [xSeq, objective] = simulate(x,theta,featureList,const,len,varargin)
 
-ops = sdpsettings('verbose',0,'solver','mosek');
-n_in = d.nFeatures;%dim of algorithm-input data sample
-n_out = d.nActions;
-theta_xu = theta(1:n_in,n_in+1:end);
-theta_ux = theta(n_in+1:end,1:n_in);
-theta_uu = theta(n_in+1:end,n_in+1:end);
-theta_uu = (theta_uu+theta_uu')/2;
-const.W = zeros(1,d.nStates);const.L = 0;const.M = 0;
-objective = zeros(d.length,1);
-phi = d.phi(1,:);
-featureList{1} = replace(d.featureList{1},'obj.','');
-featureList{2} = replace(d.featureList{2},'obj.','');
-goalPose = d.goalPose;
-
-for i=1:d.length
-    %Calculate the one-step prediction optimal input using YALMIP
-    u = sdpvar(n_out,1);
-    
-    %Constraints
-    con = [-5*ones(n_out,1)<= u <= 5*ones(n_out,1)];
-    %con = [con, const.M*u <= const.W*phi(end,1:d.nStates)' + const.L];
-    
-    %Objective function    
-    obj = u'*theta_uu*u+ phi(end,:)*(theta_xu+theta_ux')*u;
-    
-    %Check if there is any error
-    diag = optimize( con , obj, ops);
-    if diag.problem ~= 0
-        fprintf('Suboptimal Input Optimization unsuccessful! [Error Code:%d]\n',diag.problem);
+    ops = sdpsettings('verbose',0,'solver','mosek');
+    for i=1:nargin-5
+        a{i} = varargin{i};
     end
     
-    %Update the state by taking the optimal action
-    x = phi(end,1:d.nStates) + value(u)';
-    
-    %Construct features
-   
-    %Get coordinates of end-effector 
-    end_eff = getEndEffCoord(x);
-    
-    phiTemp = [];
+    nStates = size(x,2);
+    nFeatures = 0;
     for i=1:size(featureList,2)
-        phiTemp = [phiTemp eval(featureList{i})];
+        featureList{i} = replace(featureList{i},'obj.','');
+        nFeatures = nFeatures + size(eval(featureList{i}),2);
     end
-%     phi = [phi; xNew end_eff-d.goalObj];
-    phi = [phi;phiTemp];
+    nActions = size(theta,1) - nFeatures;
+    
+    theta_xu = theta(1:nFeatures,nFeatures+1:end);
+    theta_ux = theta(nFeatures+1:end,1:nFeatures);
+    theta_uu = theta(nFeatures+1:end,nFeatures+1:end);
+    theta_uu = (theta_uu+theta_uu')/2;
+       
+    objective = zeros(len,1);
+    xSeq = zeros(len,nStates);
+       
+    for i=1:len
+        
+        phi = [];
+        for j=1:size(featureList,2)
+            phi = [phi eval(featureList{j})];
+        end
+ 
+        %Calculate the one-step prediction optimal input using YALMIP
+        u = sdpvar(nActions,1);
 
-    %Stage cost
-    objective(i) = value(obj);
-end
-x = phi(:,1:d.nStates);
-fprintf('Successfully simulated motion with the learned cost function.\n');
+        %Constraints
+       % con = [-5*ones(nActions,1)<= u <= 5*ones(nActions,1)];
+       
+        con = [const.M*u <= const.W*x' + const.L];
+
+        %Objective function    
+        obj = u'*theta_uu*u+ phi*(theta_xu+theta_ux')*u;
+
+        %Check if there is any error
+        diag = optimize( con , obj, ops);
+        if diag.problem ~= 0
+            fprintf('Suboptimal Input Optimization unsuccessful! [Error Code:%d]\n',diag.problem);
+        end
+
+        %Update the state by taking the optimal action
+        x = x + value(u)';
+        xSeq(i,:) = x;
+
+        %Stage cost
+        objective(i) = value(obj);
+    end
+    fprintf('Successfully simulated trajectory with the learned cost function.\n');
 end
