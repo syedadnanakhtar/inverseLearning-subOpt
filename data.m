@@ -1,13 +1,13 @@
 %Class definition of the class data
 classdef data < handle
-    properties (Access = public)
+    properties
         filename
         x%states
         u%Output of algorithm/System inputs/actions
         phi%features
         featureList%Description of features
-        length
-        nFeatures
+        length%Number of data points
+        nFeatures%Number of features
         nStates%number of states x
         nActions%number of actions u 
     end
@@ -21,18 +21,10 @@ classdef data < handle
         %Function to construct features
         function [obj] = constructFeatures(obj,a)
             %function to construct features
-            n = size(obj.featureList,2);
-            switch nargin
-                case 1
-                    obj.phi = [];
-                    for i=1:n
-                        obj.phi = [obj.phi eval(obj.featureList{i})];
-                    end
-                otherwise
-                    obj.phi = [];
-                    for i=1:n
-                        obj.phi = [obj.phi eval(obj.featureList{i})];
-                    end
+            n = size(obj.featureList,2);           
+            obj.phi = [];
+            for i=1:n
+                obj.phi = [obj.phi eval(obj.featureList{i})];
             end
         end
         
