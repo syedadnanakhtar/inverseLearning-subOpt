@@ -1,14 +1,11 @@
-function [obj,thetaInv] = learnCostSubOpt(dat)
+function [obj,thetaInv] = learnCostSubOpt(dat,const)
 
     %dat has the following fields
     %dat.x: the states of the system in row format
-    %dat.uOpt: the optimal input in row format
-    %ref.x : the goal state or the reference state
-
+    %dat.u: the optimal input in row format
     n = dat.length;
     n_in = dat.nFeatures;%dimension of algorithm-input data sample
     n_out = dat.nActions;%dimension of algorithm-output data sample
-    const.W = zeros(1,dat.nStates);const.L = 0;const.M = 0;
     theta_uu = sdpvar(n_out,n_out,'symmetric');
     theta_xu = sdpvar(n_in,n_out);
     lambda = sdpvar(n,size(const.M,1));
@@ -16,8 +13,7 @@ function [obj,thetaInv] = learnCostSubOpt(dat)
     ops = sdpsettings('verbose',0,'solver','mosek');
     obj = 0;
     cnst = [];
-    fprintf('IOC with suboptimality loss initiated...\n');
-    fprintf('%d datatpoints are found.\n',n);
+    fprintf('%d datatpoints are found.\nIOC with suboptimality loss initiated...\n',n);
 
     for i=1:n
         obj= obj + 2*(dat.phi(i,:)) * theta_xu * (dat.u(i,:)') + ...
