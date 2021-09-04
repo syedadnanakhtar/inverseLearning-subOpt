@@ -33,7 +33,7 @@ This section explains how to use the code to learn a quadratic cost function fro
    
     Note that the data must be in a row format, where each row corresponds to the data pointing to a single time instance. The dimensions of the state and action data can be conveniently checked by `d.nStates` and `d.nActions`.
    
-4. Define a feature list. For eg, if you want the features to be constructed as [x x-a], where `a` is some constant vector, then use the following command
+4. Define a feature list. For eg, if you want the features to be constructed as [x, x-a], where `a` is some constant vector, then use the following command
 
    `d.featureList = {'obj.x' 'obj.x - a'};`
    
@@ -43,7 +43,7 @@ This section explains how to use the code to learn a quadratic cost function fro
    `d.constructFeatures();`
   
 6. Define constraints
-   The constraints are encoded in the structure `const` which has three fields: `const.M',`const.W`, and `const.L`. The constraints take the form Mu <= Wx + L. Please refer to the paper for more info. 
+   The constraints are encoded in the structure `const` which has three fields: `const.M`,`const.W`, and `const.L`. The constraints take the form Mu <= Wx + L. Please refer to the paper for more info. 
    
 7. Learn the cost function `theta` by running the command 
 
