@@ -9,7 +9,7 @@ filename = 'RM1_Healthy_0001.csv';
 dat = readtable(fullfile(path,filename));
 
 %Create a data object
-d = data(fullfile(path,filename));
+d = data( fullfile(path,filename));
 
 %Define the states(x) and the actions(u)
 d.x = [dat.lumbar_extension	dat.lumbar_bending dat.lumbar_rotation dat.arm_flex_r dat.arm_add_r...
@@ -37,9 +37,9 @@ d.constructFeatures(a);
 fprintf('Number of constructed features is %d\n', d.nFeatures);
 
 %Define Constraints: Mu <= Wx + L
-const.M = [eye(d.nActions) ; -eye(d.nActions)];
 const.W = zeros(1,d.nStates);
-const.L = 5*ones(2*d.nActions,1);
+const.L = 0;
+const.M = zeros(1,d.nActions);
 
 %Learn quadratic cost.
 [obj, theta] = learnCostSubOpt(d,const);
@@ -53,5 +53,9 @@ x0 = d.x(1,:);
 simLength = 400;
 
 %% Simulate the system with the learned cost
+%Define Constraints: Mu <= Wx + L
+const.M = zeros(1,d.nActions);
+const.W = zeros(1,d.nStates);
+const.L = [5 -5]';
 [xSeq, objective] = simulate(x0,theta,d.featureList,const,simLength,a{1});
 
