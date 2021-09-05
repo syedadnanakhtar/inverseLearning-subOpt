@@ -6,13 +6,13 @@ The project is an implementation of the paper **_Learning for Control: An Invers
 
 The repo has been tested to be working on MATLAB 2018-2020 (Ubuntu 16.04 & Windows 10)
 
-# Prerequisites
+## Prerequisites
 The code requires installation of the following 
 - MOSEK - A toolbox to solve LPs, QPs, SOCPs, SDPs and MIPs. Please find more information [here](https://www.mosek.com/).
 - YALMIP - A toolbox to provide an interfact to the solver. Please find more information [here](https://yalmip.github.io/).
 - MATLAB.
 
-# How-to
+## How-to
 This section explains how to use the code to learn a quadratic cost function from a demonstration data and its constraints. The code can be readilly executed due to the presence of an example data. 
 
 1. Clone the package locally on your computer 
@@ -33,7 +33,7 @@ This section explains how to use the code to learn a quadratic cost function fro
    
     Note that the data must be in a row format, where each row corresponds to the data pointing to a single time instance. The dimensions of the state and action data can be conveniently checked by `d.nStates` and `d.nActions`.
    
-4. Define a feature list. For eg, if you want the features to be constructed as [x x-a], where `a` is some constant vector, then use the following command
+4. Define a feature list. For eg, if you want the features to be constructed as [x, x-a], where `a` is some constant vector, then use the following command
 
    `d.featureList = {'obj.x' 'obj.x - a'};`
    
@@ -43,7 +43,7 @@ This section explains how to use the code to learn a quadratic cost function fro
    `d.constructFeatures();`
   
 6. Define constraints
-   The constraints are encoded in the structure `const` which has three fields: `const.M',`const.W`, and `const.L`. The constraints take the form Mu <= Wx + L. Please refer to the paper for more info. 
+   The constraints are encoded in the structure `const` which has three fields: `const.M`,`const.W`, and `const.L`. The constraints take the form Mu <= Wx + L. Please refer to the paper for more info. 
    
 7. Learn the cost function `theta` by running the command 
 
@@ -66,7 +66,7 @@ This section explains how to use the code to learn a quadratic cost function fro
  The dataset containts the states x (joint angles), as well as u (change in joint angles). 
 
 
-# Contact and Citation
+## Contact and Citation
 
 Should you come across any bug in my code or have any question, please feel free to send me an email at `syed.akhtar[at]tum[dot]de`
 
