@@ -75,7 +75,7 @@ Should you come across any bug in my code or have any question, please feel free
 If you find this project helpful, please consider citing our paper.
 ```
 @ARTICLE{9336679,
-  author={Akhtar, Syed Adnan and Kolarijani, Arman Sharifi and Esfahani, Peyman Mohajerin},
+  author={Akhtar, Syed Adnan and Kolarijani, Arman Sharifi and {Mohajerin Esfahani}, Peyman},
   journal={IEEE Control Systems Letters}, 
   title={Learning for Control: An Inverse Optimization Approach}, 
   year={2022},
