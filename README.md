@@ -4,7 +4,8 @@ The project is an implementation of the paper **_Learning for Control: An Invers
 - **[Learning for Control: An Inverse Optimization Approach](https://ieeexplore.ieee.org/document/9336679)** [Paper]
 - **[Demonstration Video](https://syedadnanakhtar.github.io/project/)**
 
-The repo has been tested to be working on MATLAB 2018-2020 (Ubuntu 16.04 & Windows 10)
+The repo has been tested to be working on MATLAB 2018-2020 (Ubuntu 16.04 & Windows 10).
+The python code is currently under construction. 
  
 The code requires installation of the following 
 - MOSEK - A toolbox to solve LPs, QPs, SOCPs, SDPs and MIPs. Please find more information [here](https://www.mosek.com/).
