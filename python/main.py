@@ -3,14 +3,15 @@ import numpy as np
 from func import Data
 from func import learnCostSubOpt
 
+
 if __name__ == '__main__':
 
     # State data
-    x = np.array([[1, 2, 3, 4, 5],
-                  [0, 4, 3, 7, 1]])
+    x = np.matrix([[1, 2, 3, 4, 5],
+                    [0, 4, 3, 7, 1]])
 
     # Actions data
-    u = np.array([[6, 5, 4, 3, 2],
+    u = np.matrix([[6, 5, 4, 3, 2],
                   [4, 5, 7, 2, 4]])
 
     # Define data object
@@ -24,5 +25,3 @@ if __name__ == '__main__':
 
     # Learn the cost function
     theta = learnCostSubOpt(x, u)
-
-
